@@ -1,0 +1,1111 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>NsquareInfra | Portfolio</title>
+
+    <link rel="icon" type="image/x-icon" href="assets/NsquareInfra.jpg">
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="style.css">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+    
+
+
+    <script>
+
+        document.addEventListener('DOMContentLoaded', () => {
+
+            const mainContent = document.getElementById('main-content');
+
+            const projectCards = [
+
+                { card: 'project-alpha-card', page: 'project-alpha-page', route: 'project-alpha' },
+
+                { card: 'project-beta-card', page: 'project-beta-page', route: 'project-beta' },
+
+                { card: 'project-gamma-card', page: 'project-gamma-page', route: 'project-gamma' },
+
+                { card: 'project-delta-card', page: 'project-delta-page', route: 'project-delta' },
+
+                
+
+            ];
+
+            // Mobile Navigation
+            const mobileMenuButton = document.getElementById('mobile-menu-button');
+            const mobileSidebar = document.getElementById('mobile-sidebar');
+            const mobileSidebarOverlay = document.getElementById('mobile-sidebar-overlay');
+            const hamburger = document.querySelector('.hamburger');
+
+            function toggleMobileMenu() {
+                hamburger.classList.toggle('active');
+                mobileSidebar.classList.toggle('active');
+                mobileSidebarOverlay.classList.toggle('active');
+                document.body.style.overflow = mobileSidebar.classList.contains('active') ? 'hidden' : 'auto';
+            }
+
+            function closeMobileMenu() {
+                hamburger.classList.remove('active');
+                mobileSidebar.classList.remove('active');
+                mobileSidebarOverlay.classList.remove('active');
+                document.body.style.overflow = 'auto';
+            }
+
+            mobileMenuButton.addEventListener('click', toggleMobileMenu);
+            mobileSidebarOverlay.addEventListener('click', closeMobileMenu);
+
+            // Close mobile menu when clicking on navigation links
+            document.querySelectorAll('.mobile-nav-link').forEach(link => {
+                link.addEventListener('click', closeMobileMenu);
+            });
+
+            // Image Slider Functionality
+
+            const slides = document.querySelectorAll('.slide');
+
+            const dots = document.querySelectorAll('.dot');
+
+            let currentSlide = 0;
+
+            const slideInterval = 4000; // 4 seconds
+
+            function showSlide(index) {
+
+                // Remove active class from all slides and dots
+
+                slides.forEach(slide => slide.classList.remove('active'));
+
+                dots.forEach(dot => dot.classList.remove('active'));
+
+                // Add active class to current slide and dot
+
+                slides[index].classList.add('active');
+
+                dots[index].classList.add('active');
+
+            }
+
+            function nextSlide() {
+
+                currentSlide = (currentSlide + 1) % slides.length;
+
+                showSlide(currentSlide);
+
+            }
+
+            // Auto slide
+
+            setInterval(nextSlide, slideInterval);
+
+            // Dot navigation
+
+            dots.forEach((dot, index) => {
+
+                dot.addEventListener('click', () => {
+
+                    currentSlide = index;
+
+                    showSlide(currentSlide);
+
+                });
+
+            });
+
+            // Initialize first slide
+
+            showSlide(0);
+
+            // Intersection Observer for scroll animations
+
+            const observerOptions = {
+
+                threshold: 0.1,
+
+                rootMargin: '0px 0px -50px 0px'
+
+            };
+
+            const observer = new IntersectionObserver((entries) => {
+
+                entries.forEach(entry => {
+
+                    if (entry.isIntersecting) {
+
+                        entry.target.classList.add('revealed');
+
+                    }
+
+                });
+
+            }, observerOptions);
+
+            // Observe all scroll-reveal elements
+
+            document.querySelectorAll('.scroll-reveal').forEach(el => {
+
+                observer.observe(el);
+
+            });
+
+            function handleRouteChange() {
+
+                const hash = window.location.hash.substring(1);
+
+                if (hash.startsWith('project-')) {
+
+                    showProjectPage(hash + '-page');
+
+                } else {
+
+                    showMainContent();
+
+                    if (hash) {
+
+                        setTimeout(() => {
+
+                            const element = document.getElementById(hash);
+
+                            if (element) {
+
+                                element.scrollIntoView({ behavior: 'smooth' });
+
+                            }
+
+                        }, 100);
+
+                    }
+
+                }
+
+            }
+
+            function showMainContent() {
+
+                mainContent.style.display = 'flex';
+
+                document.getElementById('image-slider').style.display = 'block';
+
+                projectCards.forEach(({ page }) => {
+
+                    document.getElementById(page).style.display = 'none';
+
+                });
+
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+
+            }
+
+            function showProjectPage(pageId) {
+
+                mainContent.style.display = 'none';
+
+                document.getElementById('image-slider').style.display = 'none';
+
+                projectCards.forEach(({ page }) => {
+
+                    document.getElementById(page).style.display = 'none';
+
+                });
+
+                document.getElementById(pageId).style.display = 'flex';
+
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+
+            }
+
+            function navigateToRoute(route) {
+
+                window.history.pushState({}, '', '#' + route);
+
+                handleRouteChange();
+
+            }
+
+            function navigateToMain() {
+
+                window.history.pushState({}, '', window.location.pathname);
+
+                handleRouteChange();
+
+            }
+
+            // Handle initial page load and browser navigation
+
+            handleRouteChange();
+
+            window.addEventListener('popstate', handleRouteChange);
+
+            // Attach click listeners to project cards
+
+            projectCards.forEach(({ card, route }) => {
+
+                document.getElementById(card).addEventListener('click', () => {
+
+                    navigateToRoute(route);
+
+                });
+
+            });
+
+            // Link logo to home page
+
+            document.querySelectorAll('.logo-link').forEach(logoLink => {
+                logoLink.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    navigateToMain();
+                });
+            });
+
+            // Add staggered animation to project cards
+
+            setTimeout(() => {
+
+                const cards = document.querySelectorAll('.project-card');
+
+                cards.forEach((card, index) => {
+
+                    setTimeout(() => {
+
+                        card.style.opacity = '1';
+
+                        card.style.transform = 'translateY(0)';
+
+                    }, index * 200);
+
+                });
+
+            }, 500);
+
+            // Image zoom functionality
+
+            function createImageModal() {
+
+                const modal = document.createElement('div');
+
+                modal.className = 'image-modal';
+
+                modal.innerHTML = `<span class="image-modal-close">&times;</span> <img class="image-modal-content" src="" alt="">
+
+ `;
+
+                document.body.appendChild(modal);
+
+                return modal;
+
+            }
+
+            const imageModal = createImageModal();
+
+            const modalContent = imageModal.querySelector('.image-modal-content');
+
+            const closeBtn = imageModal.querySelector('.image-modal-close');
+
+            function openImageModal(imageSrc, imageAlt) {
+
+                modalContent.src = imageSrc;
+
+                modalContent.alt = imageAlt;
+
+                imageModal.classList.add('active');
+
+                document.body.style.overflow = 'hidden'; // Prevent background scrolling
+
+            }
+
+            function closeImageModal() {
+
+                imageModal.classList.remove('active');
+
+                document.body.style.overflow = 'auto'; // Restore scrolling
+
+            }
+
+            // Close modal when clicking close button
+
+            closeBtn.addEventListener('click', closeImageModal);
+
+            // Close modal when clicking outside the image
+
+            imageModal.addEventListener('click', (e) => {
+
+                if (e.target === imageModal) {
+
+                    closeImageModal();
+
+                }
+
+            });
+
+            // Close modal with Escape key
+
+            document.addEventListener('keydown', (e) => {
+
+                if (e.key === 'Escape' && imageModal.classList.contains('active')) {
+
+                    closeImageModal();
+
+                }
+
+            });
+
+            // Add click listeners to all zoomable images
+
+            function addImageZoomListeners() {
+
+                const zoomableImages = document.querySelectorAll('.zoomable-image');
+
+                zoomableImages.forEach(img => {
+
+                    img.addEventListener('click', () => {
+
+                        openImageModal(img.src, img.alt);
+
+                    });
+
+                });
+
+            }
+
+            // Initialize image zoom listeners
+
+            addImageZoomListeners();
+
+            // Re-initialize when navigating between pages
+
+            const originalShowProjectPage = showProjectPage;
+
+            showProjectPage = function (pageId) {
+
+                originalShowProjectPage(pageId);
+
+                setTimeout(addImageZoomListeners, 100);
+
+            };
+
+        });
+
+    </script>
+
+</head>
+
+<body class="flex flex-col min-h-screen">
+
+    <!-- Navigation Bar -->
+    <nav class="bg-white p-4 shadow-lg w-full fixed top-0 left-0 z-50 animate-slideDown">
+
+        <div class="px-4 md:px-8 flex justify-between items-center">
+
+            <!-- Logo (always visible) -->
+            <div class="flex items-center space-x-3 logo-container">
+                <a href="#" class="logo-link flex items-center space-x-3 cursor-pointer">
+                    <img src="assets/NsquareInfra-wbg.png" alt="Firoz Khan Logo" class="w-16 h-16 rounded-lg shadow-md animate-pulse-slow">
+                </a>
+                <a href="#" class="logo-link flex items-center space-x-3 cursor-pointer">
+                    <img src="assets/FkP-wbg.png" alt="Firoz Khan Logo" class="w-16 h-16 rounded-lg shadow-md animate-pulse-slow">
+                </a>
+            </div>
+
+            <!-- Desktop Navigation (hidden on mobile) -->
+            <div class="desktop-nav flex items-center space-x-6">
+
+                <a href="#"
+                    class="nav-link text-themed opacity-70 hover-text-themed font-medium transition-colors duration-200 animate-fadeIn animation-delay-100">Home</a>
+
+                <a href="#about"
+                    class="nav-link text-themed opacity-70 hover-text-themed font-medium transition-colors duration-200 animate-fadeIn animation-delay-200">About</a>
+
+                <a href="#projects"
+                    class="nav-link text-themed opacity-70 hover-text-themed font-medium transition-colors duration-200 animate-fadeIn animation-delay-300">Projects</a>
+
+                <a href="#contact"
+                    class="nav-link text-themed opacity-70 hover-text-themed font-medium transition-colors duration-200 animate-fadeIn animation-delay-400">Contact</a>
+
+            </div> 
+
+            <!-- Mobile Menu Button (only shows on mobile, positioned on right) -->
+            <button id="mobile-menu-button" class="mobile-menu-button p-2">
+                <div class="hamburger">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            </button>
+
+        </div>
+
+    </nav>
+
+    <!-- Mobile Sidebar (slides in from right) -->
+    <div id="mobile-sidebar-overlay" class="mobile-sidebar-overlay"></div>
+    <div id="mobile-sidebar" class="mobile-sidebar">
+        <div class="p-6">
+            <!-- Logo in sidebar -->
+            <div class="flex items-center space-x-3 mb-8">
+                <a href="#" class="logo-link flex items-center space-x-3 cursor-pointer">
+                    <img src="assets/NsquareInfra.jpg" alt="Firoz Khan Logo" class="w-10 h-10 rounded-lg shadow-md">
+                    <span class="text-xl font-bold text-themed">NsquareInfra</span>
+                </a>
+            </div>
+
+            <!-- Navigation Links (all nav content is here in mobile) -->
+            <nav class="space-y-4">
+                <a href="#"
+                    class="mobile-nav-link block py-3 px-4 text-themed font-medium hover:bg-gray-100 rounded-lg transition-colors duration-200">
+                    <i class="fas fa-home mr-3"></i>Home
+                </a>
+                <a href="#about"
+                    class="mobile-nav-link block py-3 px-4 text-themed font-medium hover:bg-gray-100 rounded-lg transition-colors duration-200">
+                    <i class="fas fa-user mr-3"></i>About
+                </a>
+                <a href="#projects"
+                    class="mobile-nav-link block py-3 px-4 text-themed font-medium hover:bg-gray-100 rounded-lg transition-colors duration-200">
+                    <i class="fas fa-briefcase mr-3"></i>Projects
+                </a>
+                <a href="#contact"
+                    class="mobile-nav-link block py-3 px-4 text-themed font-medium hover:bg-gray-100 rounded-lg transition-colors duration-200">
+                    <i class="fas fa-envelope mr-3"></i>Contact
+                </a>
+            </nav>
+
+            <!-- Social Links in Sidebar -->
+            <div class="mt-8 pt-6 border-t border-gray-200">
+                <p class="text-sm text-gray-500 mb-3">Connect with us</p>
+                <a href="https://www.instagram.com/" target="_blank"
+                    class="inline-flex items-center justify-center w-10 h-10 bg-gray-100 rounded-lg hover:bg-blue-100 transition-colors duration-200">
+                    <i class="fab fa-instagram text-lg"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Image Slider -->
+
+    <div id="image-slider" class="slider-container mt-20">
+
+        <div class="slider-wrapper">
+
+            <div class="slide active">
+
+                <img src="assets/slider/s2.jpg" alt="Luxury Villa Exterior">
+
+                <div class="slider-overlay"></div>
+
+                <div class="slider-content">
+
+                    <h2>Villa Projects</h2>
+
+                    <p style="font-family:cursive">"Crafting legacies from the ground up"</p>
+
+                </div>
+
+            </div>
+
+            <div class="slide">
+
+                <img src="assets/slider/s1.jpg" alt="Modern Villa Interior">
+
+                <div class="slider-overlay"></div>
+
+                <div class="slider-content">
+
+                    <h2>Turn Key Projects</h2>
+
+                    <p style="font-family:cursive">"From a plan to a palace, a commitment to perfection"</p>
+
+                </div>
+
+            </div>
+
+            <div class="slide">
+
+                <img src="assets/slider/s3.jpg" alt="Villa Architecture">
+
+                <div class="slider-overlay"></div>
+
+                <div class="slider-content">
+
+                    <h2>Massive Projects</h2>
+
+                    <p style="font-family:cursive">"The art of living, perfected"</p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="slider-dots">
+
+            <div class="dot"></div>
+
+            <div class="dot"></div>
+
+            <div class="dot"></div>
+
+        </div>
+
+    </div>
+
+    <!-- Main Content Container -->
+
+    <div id="main-content" class="flex-grow flex flex-col items-center p-8 space-y-24">
+
+        <!-- About Section -->
+
+        <section id="about"
+            class="scroll-reveal flex-1 w-full flex flex-col items-center md:flex-row md:items-start gap-12 bg-themed p-12 rounded-lg shadow-themed relative overflow-hidden"
+            style="background-image: url('assets/bodyBackgroud.jpg'); background-size: cover; background-position: center; background-repeat: no-repeat;">
+
+            <!-- Background overlay for better text readability -->
+
+            <div class="absolute inset-0 bg-white bg-opacity-75 rounded-lg animate-fadeIn"></div>
+
+            <!-- Profile Image Section - Shows first on mobile, second on desktop -->
+
+            <div
+                class="flex-shrink-0 flex flex-col items-center space-y-6 relative z-10 animate-fadeInRight order-1 md:order-2">
+
+                <img src="assets/profilePic.jpg"
+                    alt="Profile Picture of Firozkhan Pathan"
+                    class="w-72 h-96 object-cover rounded-lg shadow-themed transform hover:scale-105 transition-transform duration-500 animate-scaleIn animation-delay-400">
+
+                <div class="flex space-x-6 ">
+
+                    <a href="https://www.instagram.com/" target="_blank"
+                        class="social-icon text-themed opacity-70 hover-text-themed transition-all duration-300">
+
+                        <i class="fab fa-instagram text-2xl"></i>
+
+                    </a>
+
+                </div>
+
+            </div>
+
+            <!-- Text Content Section - Shows second on mobile, first on desktop -->
+
+            <div class="flex-1 relative z-10 animate-fadeInLeft order-2 md:order-1">
+
+                <div class="flex items-center gap-4 mb-2 animate-fadeInUp animation-delay-100">
+
+                    <p class="font-bold text-3xl"><strong>Firozkhan Pathan - Founder</strong></p>
+
+                </div>
+
+                <div class="flex items-center gap-4 mb-4 animate-fadeInUp animation-delay-400">
+
+                    <p class="font-bold"><strong>Nsquare Infra</strong></p>
+
+                    <img src="assets/NsquareInfra-wbg.png" alt="Nsquare Infra Logo" class="w-20 h-20 rounded-md shadow-md ">
+
+                </div>
+
+                <div class="flex items-center gap-4 mb-2 animate-fadeInUp animation-delay-200">
+
+                    <p class="font-bold"><strong>Firozkhan Pathan</strong></p>
+
+                    <img src="assets/FkP-wbg.png" alt="Firozkhan Pathan Logo" class="w-20 h-20 rounded-md shadow-md ">
+
+                </div>
+
+                <p class="text-base leading-normal text-themed opacity-80 animate-fadeInUp animation-delay-600">
+
+                    Firozkhan Pathan is a distinguished and highly respected figure in the construction and real
+
+                    estate industry, and the visionary founder of Nsquare Infra and Firozkhan Pathan. With over
+
+                    two decades of international and domestic experience, Firozkhan honed his skills at leading
+
+                    firms, laying a solid foundation for the magnificent projects he would later undertake.
+
+                    His professional journey began at Salunke Builders, where he laid the groundwork for his
+
+                    impressive career. He then transitioned to the international stage at Al Khateeb Interiors in
+
+                    Dubai, where he gained invaluable experience in the intricacies of high-end interior projects.
+
+                    He then returned to India to join Sun Estates Developers, a prominent name in luxury real
+
+                    estate, where he played a key role in developing opulent properties.
+
+                </p>
+
+            </div>
+
+        </section>
+
+        <!-- Projects Section -->
+
+        <section id="projects" class="scroll-reveal w-full">
+
+            <h2 class="text-3xl sm:text-4xl font-extrabold text-themed mb-8 text-center animate-fadeInUp">Featured
+                Projects</h2>
+
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8 px-8">
+
+                <!-- Project Card 1 -->
+
+                <div id="project-alpha-card"
+                    class="project-card bg-themed rounded-lg shadow-themed overflow-hidden cursor-pointer"
+                    style="opacity: 0; transform: translateY(30px); transition: all 0.6s ease;">
+
+                    <img src="assets/GRI/Screenshot 2025-09-19 at 5.11.20 PM.png" alt="Project Alpha"
+                        class="w-full h-64 object-cover">
+
+                    <div class="p-6">
+
+                        <h3 class="text-xl font-bold text-themed mb-2">Ganga Reddy Infra Pvt Ltd
+
+                            <strong class="text-sm text-themed opacity-80">
+
+                                Ongoing Project
+
+                            </strong>
+
+                        </h3>
+
+                        <p class="text-sm text-themed opacity-80">
+
+                            Project Location : North Goa
+
+                            Overseen and executed the development of remarkable grey structures of Luxurious Villas for
+                            GangaReddy infra pvt ltd.
+
+                        </p>
+
+                    </div>
+
+                </div>
+
+                <!-- Project Card 2 -->
+
+                <div id="project-beta-card"
+                    class="project-card bg-themed rounded-lg shadow-themed overflow-hidden cursor-pointer"
+                    style="opacity: 0; transform: translateY(30px); transition: all 0.6s ease;">
+
+                    <img src="assets/KBS/cardImage.jpg" alt="Project Beta" class="w-full h-64 object-cover">
+
+                    <div class="p-6">
+
+                        <h3 class="text-xl font-bold text-themed mb-2">Krishna Buildspace Pvt Ltd
+                            <strong class="text-sm text-themed opacity-80">
+                                Ongoing Project
+                            </strong>
+                        </h3>
+                        <p class="text-sm text-themed opacity-80">
+
+                            Project Name : Hostel Buildings
+                            Project Location : Goa University-Bambolim, Goa
+                            Undertaken work of Grey structure at Goa university.
+                        </p>
+                    </div>
+
+                </div>
+
+                <!-- Project Card 3 -->
+
+                <div id="project-gamma-card"
+                    class="project-card bg-themed rounded-lg shadow-themed overflow-hidden cursor-pointer"
+                    style="opacity: 0; transform: translateY(30px); transition: all 0.6s ease;">
+
+                    <img src="assets/AG/cardImage.jpg" alt="Project Gamma" class="w-full h-64 object-cover">
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold text-themed mb-2">Aadit Group
+                            <br>
+                            <strong class="text-sm text-themed opacity-80">
+                                Ongoing Project
+                            </strong>
+                        </h3>
+                        <p class="text-sm text-themed opacity-80">
+                            Project Name : Panchayat Building
+                            Project Location : Velguem-Pale, Goa
+                            Undertaken and overseen work of Grey structure of the Panchayat Building.
+                        </p>
+                    </div>
+
+                </div>
+                <!-- Project Card 4 -->
+
+                <div id="project-delta-card"
+                    class="project-card bg-themed rounded-lg shadow-themed overflow-hidden cursor-pointer"
+                    style="opacity: 0; transform: translateY(30px); transition: all 0.6s ease;">
+
+                    <img src="assets/Turnkey/celebrityVilla.jpg" alt="Project Delta" class="w-full h-64 object-cover">
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold text-themed mb-2">Turn Key
+                            <br>
+                            <strong class="text-sm text-themed opacity-80">
+                                Multiple projects have been completed and are currently in progress.
+                            </strong>
+                        </h3>
+                        <p class="text-sm text-themed opacity-80">
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+        </section>
+
+        <!-- Contact Section -->
+
+        <section id="contact" class="scroll-reveal w-full bg-themed p-12 rounded-lg shadow-themed">
+
+            <h2 class="text-3xl sm:text-4xl font-extrabold text-themed mb-8 text-center animate-fadeInUp">Contact Us
+            </h2>
+
+            <div class="max-w-4xl mx-auto grid md:grid-cols-2 gap-8">
+
+                <div class="animate-fadeInLeft">
+
+                    <h3 class="text-xl font-bold text-themed mb-4">Get In Touch</h3>
+
+                    <div class="space-y-4">
+
+                        <div class="flex items-center space-x-3">
+
+                            <i class="fas fa-phone text-themed opacity-70"></i>
+
+                            <span class="text-themed opacity-80">+91 9923654586</span>
+
+                        </div>
+
+                        <div class="flex items-center space-x-3">
+
+                            <i class="fas fa-envelope text-themed opacity-70"></i>
+
+                            <span class="text-themed opacity-80">firozcivilinterior@gmail.com</span>
+
+                        </div>
+
+                        <div class="flex items-center space-x-3">
+
+                            <i class="fas fa-map-marker-alt text-themed opacity-70"></i>
+
+                            <span class="text-themed opacity-80">Goa, India</span>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="animate-fadeInRight">
+
+                    <h3 class="text-xl font-bold text-themed mb-4">Our Services</h3>
+
+                    <ul class="space-y-2 text-themed opacity-80">
+
+                        <li>• Luxury Villa Construction</li>
+
+                        <li>• Commercial and Residential &nbsp;Building Development</li>
+
+                        <li>• Interior Design & Renovation</li>
+
+                     
+
+                    </ul>
+
+                </div>
+
+            </div>
+
+        </section>
+
+    </div>
+
+    <!-- Project Alpha Page -->
+
+    <div id="project-alpha-page" class="project-page flex flex-col items-center p-8 mt-20 space-y-8 w-full">
+
+        <h1 class="text-4xl font-bold text-themed text-center animate-fadeInUp">Ganga Reddy Infra Pvt Ltd</h1>
+
+       <p
+            class="text-base leading-normal text-themed opacity-80 text-center max-w-2xl animate-fadeInUp animation-delay-200">
+
+            Overseen and executed the development of remarkable grey structures for Ganga Reddy Infra Pvt Ltd.
+
+        </p> 
+
+        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8 w-full mt-8">
+
+            <div class="image-with-caption animate-scaleIn animation-delay-500">
+                <img src="assets/GRI/6.jpg"
+                    alt="Modern villa exterior view" class="zoomable-image w-full rounded-lg shadow-lg">
+                <p class="image-caption">Modern villa</p>
+            </div>
+            <div class="image-with-caption animate-scaleIn animation-delay-300">
+                <img src="assets/GRI/1.jpg" class="zoomable-image w-full rounded-lg shadow-lg">
+                <p class="image-caption">Cantilever slab</p>
+            </div>
+
+            <div class="image-with-caption animate-scaleIn animation-delay-400">
+                <img src="assets/GRI/3.png"
+                    alt="Villa bedroom" class="zoomable-image w-full rounded-lg shadow-lg">
+                    <p class="image-caption" alt="can add ">Slab Casting</p>
+            </div>
+
+            
+
+            <div class="image-with-caption animate-scaleIn animation-delay-600">
+                <img src="assets/GRI/7.jpg"
+                    alt="Villa garden and patio" class="zoomable-image w-full rounded-lg shadow-lg">
+                    
+            </div>
+
+            <div class="image-with-caption animate-scaleIn animation-delay-700">
+                <img src="assets/GRI/8.jpg"
+                    alt="Villa kitchen with island" class="zoomable-image w-full rounded-lg shadow-lg">
+                <p class="image-caption" alt="can add ">Block masonary</p>
+            </div>
+
+            <div class="image-with-caption animate-scaleIn animation-delay-800">
+                <img src="assets/GRI/10.jpg"  class="zoomable-image w-full rounded-lg shadow-lg">
+                <p class="image-caption" alt="can add "></p>
+            </div>
+
+            <div class="image-with-caption animate-scaleIn animation-delay-900">
+                <img src="assets/GRI/11.jpg"  class="zoomable-image w-full rounded-lg shadow-lg">
+                <p class="image-caption" alt="can add "></p>
+            </div>
+
+            <div class="image-with-caption animate-scaleIn animation-delay-1000">
+                <img src="assets/GRI/13.jpg"  class="zoomable-image w-full rounded-lg shadow-lg">
+                <p class="image-caption" alt="can add ">Flat footings</p>
+                
+            </div>
+
+            <div class="image-with-caption animate-scaleIn animation-delay-1100">
+                <img src="assets/GRI/9e93bdc7-8204-42f9-b8b8-56db76792274.jpg" alt="Villa bathroom" class="zoomable-image w-full rounded-lg shadow-lg">
+                    <p class="image-caption" alt="can add ">Pool construction</p>
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Project Beta Page -->
+
+    <div id="project-beta-page" class="project-page flex flex-col items-center p-8 mt-20 space-y-8 w-full">
+
+        <h1 class="text-4xl font-bold text-themed text-center animate-fadeInUp">Krishna Buildspace Pvt Ltd</h1>
+
+       <!--  <p
+            class="text-base leading-normal text-themed opacity-80 text-center max-w-2xl animate-fadeInUp animation-delay-200">
+
+            This comprehensive renovation project revitalized an older commercial building, transforming it into a
+            modern, energy-efficient workspace. The scope included a complete overhaul of the interior layout, a new
+            facade, and the integration of smart building systems to enhance functionality and sustainability.
+
+        </p> -->
+
+        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8 w-full mt-8">
+
+            <div class="image-with-caption animate-scaleIn animation-delay-300">
+
+                <img src="assets/KBS/4.png"
+                    alt="Commercial building exterior" class="zoomable-image w-full rounded-lg shadow-lg">
+
+                <p class="image-caption">3d-Design</p>
+
+            </div>
+
+            <div class="image-with-caption animate-scaleIn animation-delay-400">
+
+                <img src="assets/KBS/2.png"
+                    alt="Lobby area" class="zoomable-image w-full rounded-lg shadow-lg">
+
+                <p class="image-caption">Garbage Shed at Amona,Goa</p>
+
+            </div>
+
+            <div class="image-with-caption animate-scaleIn animation-delay-500">
+
+                <img src="assets/KBS/3.png"
+                    alt="Open office plan" class="zoomable-image w-full rounded-lg shadow-lg">
+
+                <p class="image-caption">PCC work</p>
+
+            </div>
+
+            <div class="image-with-caption animate-scaleIn animation-delay-600">
+
+                <img src="assets/KBS/1.png"
+                    alt="Conference room" class="zoomable-image w-full rounded-lg shadow-lg">
+
+                <p class="image-caption">Grade Slab</p>
+
+            </div>
+
+            <div class="image-with-caption animate-scaleIn animation-delay-700">
+
+                <img src="assets/KBS/5.png"
+                    alt="Building cafeteria" class="zoomable-image w-full rounded-lg shadow-lg">
+
+                <p class="image-caption">PCC work</p>
+
+            </div>
+
+           
+
+        </div>
+
+    </div>
+
+    <!-- Project Gamma Page -->
+
+    <div id="project-gamma-page" class="project-page flex flex-col items-center p-8 mt-20 space-y-8 w-full">
+
+        <h1 class="text-4xl font-bold text-themed text-center animate-fadeInUp">Aadit Group</h1>
+
+        <p
+            class="text-base leading-normal text-themed opacity-80 text-center max-w-2xl animate-fadeInUp animation-delay-200">
+
+           Overseen and executed the development of remarkable grey structures for Aadit Group
+
+        </p>
+
+        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8 w-full mt-8">
+
+            <div class="image-with-caption animate-scaleIn animation-delay-300">
+
+                <img src="assets/AG/cardImage.jpg" alt="Urban public square" class="zoomable-image w-full rounded-lg shadow-lg">
+
+                <p class="image-caption">3d Design</p>
+
+            </div>
+
+            <div class="image-with-caption animate-scaleIn animation-delay-400">
+
+                <img src="assets/AG/2.jpg"
+                    alt="Modern transit station" class="zoomable-image w-full rounded-lg shadow-lg">
+
+                <p class="image-caption">Trapezoidal Footings</p>
+
+            </div>
+
+            <div class="image-with-caption animate-scaleIn animation-delay-500">
+
+                <img src="assets/AG/3.jpg"
+                    alt="Park pathways" class="zoomable-image w-full rounded-lg shadow-lg">
+
+                <p class="image-caption">Trapezoidal Footings</p>
+
+            </div>
+
+            <div class="image-with-caption animate-scaleIn animation-delay-600">
+
+                <img src="assets/AG/4.jpg"
+                    alt="Cityscape" class="zoomable-image w-full rounded-lg shadow-lg">
+
+                <p class="image-caption">PCC work</p>
+
+            </div>
+
+            <div class="image-with-caption animate-scaleIn animation-delay-700">
+
+                <img src="assets/AG/5.jpg"
+                    alt="Streetscape" class="zoomable-image w-full rounded-lg shadow-lg">
+
+                <p class="image-caption">PCC work</p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Project Delta Page -->
+
+    <div id="project-delta-page" class="project-page flex flex-col items-center p-8 mt-20 space-y-8 w-full">
+
+        <h1 class="text-4xl font-bold text-themed text-center animate-fadeInUp">Turn Key Projects</h1>
+
+        <p
+            class="text-base leading-normal text-themed opacity-80 text-center max-w-2xl animate-fadeInUp animation-delay-200">
+
+            Proven success in managing and delivering multiple end-to-end turnkey projects with superior results
+           
+
+        </p>
+
+        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8 w-full mt-8">
+
+            <div class="image-with-caption animate-scaleIn animation-delay-300">
+
+                <img src="assets/Turnkey/celebrityVilla.jpg" alt="Urban public square" class="zoomable-image w-full rounded-lg shadow-lg">
+
+                <p class="image-caption">Celebrity Villa</p>
+
+            </div>
+
+            <div class="image-with-caption animate-scaleIn animation-delay-400">
+
+                <img src="assets/Turnkey/houseSanquelim.jpg"
+                    alt="Modern transit station" class="zoomable-image w-full rounded-lg shadow-lg">
+
+                <p class="image-caption">House Sanquleim, Goa</p>
+
+            </div>
+
+            <div class="image-with-caption animate-scaleIn animation-delay-500">
+
+                <img src="assets/Turnkey/officeValpoi.png"
+                    alt="Park pathways" class="zoomable-image w-full rounded-lg shadow-lg">
+
+                <p class="image-caption">Office Valpoi, Goa</p>
+
+            </div>
+
+            <div class="image-with-caption animate-scaleIn animation-delay-600">
+
+                <img src="assets/Turnkey/bhumikaNC.jpg"
+                    alt="Cityscape" class="zoomable-image w-full rounded-lg shadow-lg">
+
+                <p class="image-caption">Bhumika Nursing College Renovation Poriem, Goa</p>
+
+            </div>
+            <div class="image-with-caption animate-scaleIn animation-delay-700">
+
+                <img src="assets/Turnkey/rudraApts.jpg"
+                    alt="Streetscape" class="zoomable-image w-full rounded-lg shadow-lg">
+
+                <p class="image-caption">Rudra Apartments Sanquelim, Goa</p>
+
+            </div>
+
+            <div class="image-with-caption animate-scaleIn animation-delay-700">
+
+                <img src="assets/Turnkey/karapurHouse.jpg"
+                    alt="Streetscape" class="zoomable-image w-full rounded-lg shadow-lg">
+
+                <p class="image-caption">Karapur House</p>
+
+            </div>
+           
+
+        </div>
+
+    </div>
+    
+
+    <!-- Footer -->
+
+    <footer
+        class="text-center text-themed opacity-60 p-4 bg-white border-t border-themed animate-fadeIn animation-delay-1000">
+
+        &copy; 2025 Firozkhan Pathan. All rights reserved.
+
+    </footer>
+
+</body>
+
+</html>

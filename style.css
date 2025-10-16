@@ -1,0 +1,880 @@
+
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+        body {
+
+            font-family: 'Inter', sans-serif;
+
+            scroll-behavior: smooth;
+
+            background-color: #f3f4f6;
+
+            color: #1f2937;
+
+        }
+
+        .bg-themed {
+            background-color: #ffffff;
+        }
+
+        .text-themed {
+            color: #1f2937;
+        }
+
+        .hover-text-themed:hover {
+            color: #4b5563;
+        }
+
+        .shadow-themed {
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+
+        .project-page {
+            display: none;
+        }
+
+        .border-themed {
+            border-color: rgba(31, 41, 55, 0.3);
+        }
+
+        /* Mobile Navigation Styles */
+        .mobile-menu-button {
+            display: none;
+        }
+
+        .mobile-sidebar {
+            position: fixed;
+            top: 0;
+            right: -100%; /* Changed from left: -100% to right: -100% */
+            width: 280px;
+            height: 100vh;
+            background-color: #ffffff;
+            box-shadow: -2px 0 10px rgba(0, 0, 0, 0.1); /* Changed shadow direction */
+            z-index: 9999;
+            transition: right 0.3s ease-in-out; /* Changed from left to right */
+            overflow-y: auto;
+        }
+
+        .mobile-sidebar.active {
+            right: 0; /* Changed from left: 0 to right: 0 */
+        }
+
+        .mobile-sidebar-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 9998;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease-in-out;
+        }
+
+        .mobile-sidebar-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .desktop-nav {
+            display: flex;
+        }
+
+        /* Updated media query to properly hide desktop nav and show mobile button */
+        @media (max-width: 768px) {
+            .mobile-menu-button {
+                display: block;
+            }
+
+            .desktop-nav {
+                display: none !important; /* Added !important to ensure it's hidden */
+            }
+            
+            /* Ensure all desktop nav links are hidden on mobile */
+            .desktop-nav a {
+                display: none !important;
+            }
+        }
+
+        /* Hamburger menu animation */
+        .hamburger {
+            width: 24px;
+            height: 20px;
+            position: relative;
+            cursor: pointer;
+        }
+
+        .hamburger span {
+            display: block;
+            position: absolute;
+            height: 3px;
+            width: 100%;
+            background: #1f2937;
+            border-radius: 3px;
+            opacity: 1;
+            left: 0;
+            transform: rotate(0deg);
+            transition: .25s ease-in-out;
+        }
+
+        .hamburger span:nth-child(1) {
+            top: 0px;
+        }
+
+        .hamburger span:nth-child(2) {
+            top: 8px;
+        }
+
+        .hamburger span:nth-child(3) {
+            top: 16px;
+        }
+
+        .hamburger.active span:nth-child(1) {
+            top: 8px;
+            transform: rotate(135deg);
+        }
+
+        .hamburger.active span:nth-child(2) {
+            opacity: 0;
+            left: -60px;
+        }
+
+        .hamburger.active span:nth-child(3) {
+            top: 8px;
+            transform: rotate(-135deg);
+        }
+
+        /* Image Slider Styles */
+
+        .slider-container {
+
+            position: relative;
+
+            width: 100%;
+
+            height: 70vh;
+
+            overflow: hidden;
+
+            border-radius: 0;
+
+        }
+
+        .slider-wrapper {
+
+            position: relative;
+
+            width: 100%;
+
+            height: 100%;
+
+        }
+
+        .slide {
+
+            position: absolute;
+
+            top: 0;
+
+            left: 0;
+
+            width: 100%;
+
+            height: 100%;
+
+            opacity: 0;
+
+            transition: opacity 1.5s ease-in-out;
+
+        }
+
+        .slide.active {
+
+            opacity: 1;
+
+        }
+
+        .slide img {
+
+            width: 100%;
+
+            height: 100%;
+
+            object-fit: cover;
+
+        }
+
+        .slider-overlay {
+
+            position: absolute;
+
+            top: 0;
+
+            left: 0;
+
+            width: 100%;
+
+            height: 100%;
+
+            background: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.1));
+
+            z-index: 2;
+
+        }
+
+        .slider-content {
+
+            position: absolute;
+
+            top: 50%;
+
+            left: 50%;
+
+            transform: translate(-50%, -50%);
+
+            text-align: center;
+
+            color: white;
+
+            z-index: 3;
+
+        }
+
+        .slider-content h2 {
+
+            font-size: 3rem;
+
+            font-weight: bold;
+
+            margin-bottom: 1rem;
+
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+
+        }
+
+        .slider-content p {
+
+            font-size: 1.25rem;
+
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+
+        }
+
+        .slider-dots {
+
+            position: absolute;
+
+            bottom: 20px;
+
+            left: 50%;
+
+            transform: translateX(-50%);
+
+            display: flex;
+
+            gap: 10px;
+
+            z-index: 4;
+
+        }
+
+        .dot {
+
+            width: 12px;
+
+            height: 12px;
+
+            border-radius: 50%;
+
+            background-color: rgba(255, 255, 255, 0.5);
+
+            cursor: pointer;
+
+            transition: background-color 0.3s ease;
+
+        }
+
+        .dot.active {
+
+            background-color: white;
+
+        }
+
+        @media (max-width: 768px) {
+
+            .slider-container {
+
+                height: 50vh;
+
+            }
+
+            .slider-content h2 {
+
+                font-size: 2rem;
+
+            }
+
+            .slider-content p {
+
+                font-size: 1rem;
+
+            }
+
+        }
+
+        /* Enhanced Animations */
+
+        @keyframes fadeInUp {
+
+            from {
+
+                opacity: 0;
+
+                transform: translateY(30px);
+
+            }
+
+            to {
+
+                opacity: 1;
+
+                transform: translateY(0);
+
+            }
+
+        }
+
+        @keyframes fadeInLeft {
+
+            from {
+
+                opacity: 0;
+
+                transform: translateX(-30px);
+
+            }
+
+            to {
+
+                opacity: 1;
+
+                transform: translateX(0);
+
+            }
+
+        }
+
+        @keyframes fadeInRight {
+
+            from {
+
+                opacity: 0;
+
+                transform: translateX(30px);
+
+            }
+
+            to {
+
+                opacity: 1;
+
+                transform: translateX(0);
+
+            }
+
+        }
+
+        @keyframes fadeIn {
+
+            from {
+
+                opacity: 0;
+
+            }
+
+            to {
+
+                opacity: 1;
+
+            }
+
+        }
+
+        @keyframes slideDown {
+
+            from {
+
+                opacity: 0;
+
+                transform: translateY(-20px);
+
+            }
+
+            to {
+
+                opacity: 1;
+
+                transform: translateY(0);
+
+            }
+
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+
+                opacity: 1;
+
+            }
+
+            50% {
+
+                opacity: 0.7;
+
+            }
+
+        }
+
+        @keyframes bounce {
+
+            0%,
+            20%,
+            50%,
+            80%,
+            100% {
+
+                transform: translateY(0);
+
+            }
+
+            40% {
+
+                transform: translateY(-10px);
+
+            }
+
+            60% {
+
+                transform: translateY(-5px);
+
+            }
+
+        }
+
+        @keyframes scaleIn {
+
+            from {
+
+                opacity: 0;
+
+                transform: scale(0.8);
+
+            }
+
+            to {
+
+                opacity: 1;
+
+                transform: scale(1);
+
+            }
+
+        }
+
+        @keyframes float {
+
+            0%,
+            100% {
+
+                transform: translateY(0px);
+
+            }
+
+            50% {
+
+                transform: translateY(-10px);
+
+            }
+
+        }
+
+        @keyframes shimmer {
+
+            0% {
+
+                background-position: -200% 0;
+
+            }
+
+            100% {
+
+                background-position: 200% 0;
+
+            }
+
+        }
+
+        .animate-fadeInUp {
+
+            animation: fadeInUp 0.8s ease-out forwards;
+
+        }
+
+        .animate-fadeInLeft {
+
+            animation: fadeInLeft 0.8s ease-out forwards;
+
+        }
+
+        .animate-fadeInRight {
+
+            animation: fadeInRight 0.8s ease-out forwards;
+
+        }
+
+        .animate-fadeIn {
+
+            animation: fadeIn 1s ease-out forwards;
+
+        }
+
+        .animate-slideDown {
+
+            animation: slideDown 0.8s ease-out forwards;
+
+        }
+
+        .animate-pulse-slow {
+
+            animation: pulse 3s ease-in-out infinite;
+
+        }
+
+        .animate-bounce-slow {
+
+            animation: bounce 2s infinite;
+
+        }
+
+        .animate-scaleIn {
+
+            animation: scaleIn 0.6s ease-out forwards;
+
+        }
+
+        .animate-float {
+
+            animation: float 3s ease-in-out infinite;
+
+        }
+
+        .animate-shimmer {
+
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+
+            background-size: 200% 100%;
+
+            animation: shimmer 2s infinite;
+
+        }
+
+        .animation-delay-100 {
+            animation-delay: 0.1s;
+        }
+
+        .animation-delay-200 {
+            animation-delay: 0.2s;
+        }
+
+        .animation-delay-300 {
+            animation-delay: 0.3s;
+        }
+
+        .animation-delay-400 {
+            animation-delay: 0.4s;
+        }
+
+        .animation-delay-500 {
+            animation-delay: 0.5s;
+        }
+
+        .animation-delay-600 {
+            animation-delay: 0.6s;
+        }
+
+        .animation-delay-700 {
+            animation-delay: 0.7s;
+        }
+
+        .animation-delay-800 {
+            animation-delay: 0.8s;
+        }
+
+        .animation-delay-900 {
+            animation-delay: 0.9s;
+        }
+
+        .animation-delay-1000 {
+            animation-delay: 1s;
+        }
+
+        /* Initially hide animated elements */
+
+        .animate-fadeInUp,
+
+        .animate-fadeInLeft,
+
+        .animate-fadeInRight,
+
+        .animate-fadeIn,
+
+        .animate-slideDown,
+
+        .animate-scaleIn {
+
+            opacity: 0;
+
+        }
+
+        /* Navigation animations */
+
+        .nav-link {
+
+            position: relative;
+
+            transition: all 0.3s ease;
+
+        }
+
+        .nav-link::after {
+
+            content: '';
+
+            position: absolute;
+
+            bottom: -4px;
+
+            left: 0;
+
+            width: 0;
+
+            height: 2px;
+
+            background-color: #4b5563;
+
+            transition: width 0.3s ease;
+
+        }
+
+        .nav-link:hover::after {
+
+            width: 100%;
+
+        }
+
+        /* Logo hover effect */
+
+        .logo-container {
+
+            transition: transform 0.3s ease;
+
+        }
+
+        .logo-container:hover {
+
+            transform: scale(1.05);
+
+        }
+
+        /* Social media icons enhanced animations */
+
+        .social-icon {
+
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+
+        }
+
+        .social-icon:hover {
+
+            transform: translateY(-3px) scale(1.2);
+
+            color: #3b82f6;
+
+        }
+
+        /* Enhanced project card animations */
+
+        .project-card {
+
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+
+            transform-origin: center;
+
+        }
+
+        .project-card:hover {
+
+            transform: translateY(-8px) scale(1.02);
+
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+
+        }
+
+        /* Intersection Observer triggered animations */
+
+        .scroll-reveal {
+
+            opacity: 0;
+
+            transform: translateY(50px);
+
+            transition: all 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+
+        }
+
+        .scroll-reveal.revealed {
+
+            opacity: 1;
+
+            transform: translateY(0);
+
+        }
+
+        /* Image zoom modal styles */
+
+        .image-modal {
+
+            position: fixed;
+
+            top: 0;
+
+            left: 0;
+
+            width: 100%;
+
+            height: 100%;
+
+            background-color: rgba(0, 0, 0, 0.9);
+
+            display: flex;
+
+            justify-content: center;
+
+            align-items: center;
+
+            z-index: 1000;
+
+            opacity: 0;
+
+            visibility: hidden;
+
+            transition: all 0.3s ease;
+
+        }
+
+        .image-modal.active {
+
+            opacity: 1;
+
+            visibility: visible;
+
+        }
+
+        .image-modal-content {
+
+            max-width: 90vw;
+
+            max-height: 90vh;
+
+            object-fit: contain;
+
+            border-radius: 8px;
+
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
+
+            transform: scale(0.8);
+
+            transition: transform 0.3s ease;
+
+        }
+
+        .image-modal.active .image-modal-content {
+
+            transform: scale(1);
+
+        }
+
+        .image-modal-close {
+
+            position: absolute;
+
+            top: 20px;
+
+            right: 30px;
+
+            color: white;
+
+            font-size: 40px;
+
+            font-weight: bold;
+
+            cursor: pointer;
+
+            z-index: 1001;
+
+            transition: color 0.3s ease;
+
+        }
+
+        .image-modal-close:hover {
+
+            color: #ff4444;
+
+        }
+
+        /* Zoomable image cursor */
+
+        .zoomable-image {
+
+            cursor: zoom-in;
+
+            transition: all 0.3s ease;
+
+        }
+
+        .zoomable-image:hover {
+
+            transform: scale(1.05);
+
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+
+        }
+
+        /* Project page image with caption */
+
+        .image-with-caption {
+
+            display: flex;
+
+            flex-direction: column;
+
+            align-items: center;
+
+        }
+
+        .image-caption {
+
+            margin-top: 0.75rem;
+
+            text-align: center;
+
+            font-size: 0.875rem;
+
+            color: #6b7280;
+
+            font-weight: 500;
+
+        }
